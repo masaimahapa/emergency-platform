@@ -13,12 +13,15 @@ export interface BaseEmergency {
     description: string;
     location: Location;
     status: EmergencyStatus;
+
 }
 
 export interface EmergencyInput extends BaseEmergency {}
 
 export interface Emergency extends BaseEmergency {
     id: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 const EmergencyService = {
@@ -32,7 +35,33 @@ const EmergencyService = {
                     latitude: -26.1074,
                     longitude: 28.0543
                 },
-                status: EmergencyStatus.ACTIVE
+                status: EmergencyStatus.ACTIVE,
+                createdAt: "2025-03-09",
+                updatedAt: "2025-03-09"
+            },
+            {
+                id: 2,
+                name: "House Break-in",
+                description: "A house break-in has occurred at 123 Main St, Johannesburg.",
+                location: {
+                    latitude: -26.1074,
+                    longitude: 28.0543
+                },
+                status: EmergencyStatus.ACTIVE,
+                createdAt: "2025-03-09",
+                updatedAt: "2025-03-09"
+            },
+            {
+                id: 3,
+                name: "Car Accident",
+                description: "A car accident has occurred on the N1 highway near Sandton.",
+                location: {
+                    latitude: -26.1074,
+                    longitude: 28.0543
+                },
+                status: EmergencyStatus.ACTIVE,
+                createdAt: "2025-03-09",
+                updatedAt: "2025-03-09"
             }
         ]
     },
@@ -45,7 +74,9 @@ const EmergencyService = {
                 latitude: -26.1074,
                 longitude: 28.0543
             },
-            status: EmergencyStatus.ACTIVE
+            status: EmergencyStatus.ACTIVE,
+            createdAt: "2025-03-09",
+            updatedAt: "2025-03-09"
         }
     },
     createEmergency: async (emergency: EmergencyInput): Promise<Emergency> => {
@@ -71,7 +102,9 @@ const EmergencyService = {
             name: emergency.name,
             description: emergency.description,
             location: emergency.location,
-            status: EmergencyStatus.ACTIVE
+            status: EmergencyStatus.ACTIVE,
+            createdAt: "2025-03-09",
+            updatedAt: "2025-03-09"
         }
     },
     updateEmergency: async (id: string, emergency: EmergencyInput): Promise<Emergency> => {
@@ -80,7 +113,9 @@ const EmergencyService = {
             name: emergency.name,
             description: emergency.description,
             location: emergency.location,
-            status: EmergencyStatus.RESOLVED
+            status: EmergencyStatus.RESOLVED,
+            createdAt: "2025-03-09",
+            updatedAt: "2025-03-09"
         }
     }
 }
