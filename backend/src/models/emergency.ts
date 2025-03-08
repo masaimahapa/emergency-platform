@@ -1,13 +1,88 @@
-const Emergency = {
-    getEmergencies: async () => {
+interface Location {
+    latitude: number;
+    longitude: number;
+}
+
+enum EmergencyStatus {
+    ACTIVE = "active",
+    RESOLVED = "resolved"
+}
+
+export interface BaseEmergency {
+    name: string;
+    description: string;
+    location: Location;
+    status: EmergencyStatus;
+}
+
+export interface EmergencyInput extends BaseEmergency {}
+
+export interface Emergency extends BaseEmergency {
+    id: number;
+}
+
+const EmergencyService = {
+    getEmergencies: async (): Promise<Emergency[]> => {
         return [
             {
                 id: 1,
                 name: "Fire",
-                description: "A fire has started at Carlton Center in Joburg CBD."
+                description: "A fire has started at Carlton Center in Joburg CBD.",
+                location: {
+                    latitude: -26.1074,
+                    longitude: 28.0543
+                },
+                status: EmergencyStatus.ACTIVE
             }
         ]
+    },
+    getEmergencyById: async (id: string): Promise<Emergency> => {
+        return {
+            id: 1,
+            name: "Fire by ID",
+            description: "A fire has started at Carlton Center in Joburg CBD.",
+            location: {
+                latitude: -26.1074,
+                longitude: 28.0543
+            },
+            status: EmergencyStatus.ACTIVE
+        }
+    },
+    createEmergency: async (emergency: EmergencyInput): Promise<Emergency> => {
+        if (!emergency.name || emergency.name.trim() === '') {
+            throw new Error('Emergency name is required');
+        }
+        
+        if (!emergency.description || emergency.description.trim() === '') {
+            throw new Error('Emergency description is required');
+        }
+        
+        if (!emergency.location || !emergency.location.latitude || !emergency.location.longitude) {
+            throw new Error('Valid location coordinates are required');
+        }
+        
+        if (!emergency.location.latitude || !emergency.location.longitude) {
+            throw new Error('Valid location coordinates are required');
+        }
+
+        
+        return {
+            id: 1, 
+            name: emergency.name,
+            description: emergency.description,
+            location: emergency.location,
+            status: EmergencyStatus.ACTIVE
+        }
+    },
+    updateEmergency: async (id: string, emergency: EmergencyInput): Promise<Emergency> => {
+        return {
+            id: 1,
+            name: emergency.name,
+            description: emergency.description,
+            location: emergency.location,
+            status: EmergencyStatus.RESOLVED
+        }
     }
 }
 
-export default Emergency;
+export default EmergencyService;
