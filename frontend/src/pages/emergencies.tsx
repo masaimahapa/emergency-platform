@@ -28,6 +28,7 @@ function Emergencies(){
                         <TableHead>Location</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Created At</TableHead>
+                        <TableHead>Updated At</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

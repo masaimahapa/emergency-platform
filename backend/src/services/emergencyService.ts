@@ -32,6 +32,30 @@ const emergencyService = {
         } catch (error) {
             throw error;
         }
+    },
+    assignResponderToEmergency: async (emergencyId: string, responderId: string) => {
+        try {
+            const result = await Emergency.assignResponderToEmergency(emergencyId, responderId);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }, 
+    getEmergencyWithResponders: async (id: string) => {
+        try {
+            const result = await Emergency.getEmergencyWithResponders(id);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    },
+    removeResponderFromEmergency: async (emergencyId: string, responderId: string) => {
+        try {
+            const result = await Emergency.removeResponderFromEmergency(emergencyId, responderId);
+            return result;
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import {drizzle} from 'drizzle-orm/libsql';
 import {eq} from 'drizzle-orm';
-import {respondersTable, emergenciesTable} from './db/schema';
+import {respondersTable, emergenciesTable, responderEmergenciesTable} from './db/schema';
 
 const db = drizzle(process.env.DB_FILE_NAME!);
 
@@ -42,9 +42,37 @@ async function main(){
         status: 'active',
     }
 
-    await db.insert(respondersTable).values(responder);
+    const responder2 : typeof respondersTable.$inferInsert = {
+        name: 'SAPS',
+        type: 'police',
+        latitude:-26.1074,
+        longitude: 28.0543,
+        status: 'active',
+    }
 
+    const responder3 : typeof respondersTable.$inferInsert = {
+        name: 'ER24',
+        type: 'ambulance',
+        latitude:-26.1074,
+        longitude: 28.0543,
+        status: 'active',
+    }
+
+    await db.insert(respondersTable).values(responder);
+    await db.insert(respondersTable).values(responder2);
+    await db.insert(respondersTable).values(responder3);
     console.log('Responder created successfully');
+
+    const emergencies = await db.select().from(emergenciesTable);
+    const responders = await db.select().from(respondersTable);
+
+    await db.insert(responderEmergenciesTable).values([
+        { emergencyId: emergencies[0].id, responderId: responders[1].id }, // Fire Department to Fire emergency
+        { emergencyId: emergencies[1].id, responderId: responders[2].id }, // Ambulance to Medical emergency
+        { emergencyId: emergencies[2].id, responderId: responders[0].id }, // ADT Security to Police emergency
+        { emergencyId: emergencies[0].id, responderId: responders[0].id }, // ADT Security also to Fire emergency
+    ])
+    console.log('ResponderEmergencies created successfully');
 }
 
 main().catch(console.error);

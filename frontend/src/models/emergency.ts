@@ -1,3 +1,5 @@
+import { Responder } from './responder';
+
 // interface Location {
 //     latitude: number;
 //     longitude: number;
@@ -23,6 +25,7 @@ export interface Emergency extends BaseEmergency {
     id: number;
     createdAt: number;
     updatedAt: number;
+    responders?: Responder[];
 }
 
 export interface EmergencyResponse {

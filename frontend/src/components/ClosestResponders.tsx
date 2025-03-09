@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Responder, mockResponders } from '@/models/responder';
+import { Responder } from '@/models/responder';
 import { calculateDistance } from '@/lib/utils';
 
 
@@ -21,15 +21,16 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
     const fetchResponders = async () => {
       try {
         setLoading(true);
-        // TODO: Replace with actual API call when backend is ready
-        // const response = await fetch('/api/responders');
-        // const data = await response.json();
+        // Fetch available responders from API
+        const response = await fetch('/api/responders/available');
+        const data = await response.json();
         
-        // Using mock data for now
-        setTimeout(() => {
-          setResponders(mockResponders);
-          setLoading(false);
-        }, 500); // Simulate API delay
+        if (data.data) {
+          setResponders(data.data);
+        } else {
+          setError('No responders found');
+        }
+        setLoading(false);
       } catch (err) {
         setError('Failed to load responders');
         setLoading(false);
@@ -41,13 +42,13 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
 
   // Calculate distances and sort responders
   const sortedResponders = responders
-      .filter(responder => responder.status === 'available')
+    .filter(responder => responder.status === 'active')
     .filter(responder => !emergencyType || responder.type === emergencyType.toLowerCase())
     .map(responder => ({
       ...responder,
       distance: calculateDistance(
         {latitude: emergencyLocation.latitude, longitude: emergencyLocation.longitude},
-         {latitude: responder.latitude, longitude: responder.longitude})
+        {latitude: responder.latitude, longitude: responder.longitude})
     }))
     .sort((a, b) => a.distance - b.distance);
   
