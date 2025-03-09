@@ -1,18 +1,19 @@
-interface Location {
-    latitude: number;
-    longitude: number;
-}
+// interface Location {
+//     latitude: number;
+//     longitude: number;
+// }
 
-enum EmergencyStatus {
-    ACTIVE = "active",
-    RESOLVED = "resolved"
-}
+// enum EmergencyStatus {
+//     ACTIVE = "active",
+//     RESOLVED = "resolved"
+// }
 
 export interface BaseEmergency {
     name: string;
     description: string;
-    location: Location;
-    status: EmergencyStatus;
+    latitude: number;
+    longitude: number;
+    status: string;
 
 }
 
@@ -20,8 +21,8 @@ export interface EmergencyInput extends BaseEmergency {}
 
 export interface Emergency extends BaseEmergency {
     id: number;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: number;
+    updatedAt: number;
 }
 
 export interface EmergencyResponse {

@@ -2,18 +2,8 @@ import {Link} from 'react-router';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import React, { useState, useEffect } from 'react'
 
-interface Emergency {
-    id: string;
-    name: string;
-    description: string;
-    location: {
-        latitude: number;
-        longitude: number;
-    };
-    status: 'pending' | 'resolved';
-    createdAt: string;
-    updatedAt: string;
-}
+import { Emergency } from '@/models/emergency';
+
 function Emergencies(){
     const [emergencies, setEmergencies] = useState<Emergency[]>([]);
 
@@ -52,7 +42,7 @@ function Emergencies(){
                                     </Link>
                                     </TableCell>
                                 <TableCell>{emergency.description}</TableCell>
-                                <TableCell>{emergency.location.latitude}, {emergency.location.longitude}</TableCell>
+                                <TableCell>{emergency.latitude}, {emergency.longitude}</TableCell>
                                 <TableCell>{emergency.status}</TableCell>
                                 <TableCell>{new Date(emergency.createdAt).toLocaleString()}</TableCell>
                                 <TableCell>{new Date(emergency.updatedAt).toLocaleString()}</TableCell>

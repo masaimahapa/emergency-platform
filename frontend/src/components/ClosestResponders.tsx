@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Responder, mockResponders, ResponderStatus } from '@/models/responder';
+import { Responder, mockResponders } from '@/models/responder';
 import { calculateDistance } from '@/lib/utils';
-import { Location } from '@/models/responder';
+
 
 interface ClosestRespondersProps {
-  emergencyLocation: Location;
+  emergencyLocation: {latitude: number, longitude: number};
   emergencyType?: string; // Optional, for filtering responders by type
 }
 
@@ -12,6 +12,7 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
   emergencyLocation,
   emergencyType
 }) => {
+
   const [responders, setResponders] = useState<Responder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,11 +41,13 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
 
   // Calculate distances and sort responders
   const sortedResponders = responders
-    .filter(responder => responder.status === ResponderStatus.AVAILABLE)
+      .filter(responder => responder.status === 'available')
     .filter(responder => !emergencyType || responder.type === emergencyType.toLowerCase())
     .map(responder => ({
       ...responder,
-      distance: calculateDistance(emergencyLocation, responder.location)
+      distance: calculateDistance(
+        {latitude: emergencyLocation.latitude, longitude: emergencyLocation.longitude},
+         {latitude: responder.latitude, longitude: responder.longitude})
     }))
     .sort((a, b) => a.distance - b.distance);
   

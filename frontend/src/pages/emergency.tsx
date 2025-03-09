@@ -105,11 +105,7 @@ const EmergencyPage = () => {
         const fetchResponders = async () => {
             try {
                 setLoadingResponders(true);
-                // TODO: Replace with actual API call when backend is ready
-                // const response = await fetch('/api/responders');
-                // const data = await response.json();
-                
-                // Using mock data for now
+
                 setTimeout(() => {
                     setResponders(mockResponders);
                     setLoadingResponders(false);
@@ -144,7 +140,7 @@ const EmergencyPage = () => {
     // Calculate responder distances for the component
     const respondersWithDistance = responders.map(responder => ({
         ...responder,
-        distance: calculateDistance(emergency.location, responder.location)
+        distance: calculateDistance({latitude: emergency.latitude, longitude: emergency.longitude}, {latitude: responder.latitude, longitude: responder.longitude})
     }));
 
     // Get icon for responder based on type
@@ -178,7 +174,7 @@ const EmergencyPage = () => {
                         </div>
                         <div>
                             <p className='font-medium'>Coordinates</p>
-                            <p className='text-gray-700'>{emergency.location.latitude}, {emergency.location.longitude}</p>
+                            <p className='text-gray-700'>{emergency.latitude}, {emergency.longitude}</p>
                         </div>
                         <div>
                             <p className='font-medium'>Status</p>
@@ -199,7 +195,7 @@ const EmergencyPage = () => {
 
                 {/* Closest responders section */}
                 <ClosestResponders 
-                    emergencyLocation={emergency.location} 
+                    emergencyLocation={{latitude: emergency.latitude, longitude: emergency.longitude}} 
                     emergencyType={emergency.name.split(' ')[0]} // Simple extraction of emergency type
                 />
             </div>
@@ -229,7 +225,7 @@ const EmergencyPage = () => {
                 
                 <div className='w-full h-96' style={{ position: 'relative' }}>
                     <MapContainer 
-                        center={[emergency.location.latitude, emergency.location.longitude]} 
+                        center={[emergency.latitude, emergency.longitude]} 
                         zoom={13} 
                         scrollWheelZoom={true}
                         style={{ height: '100%', width: '100%' }}
@@ -241,7 +237,7 @@ const EmergencyPage = () => {
                         
                         {/* Emergency location marker */}
                         <Marker 
-                            position={[emergency.location.latitude, emergency.location.longitude]} 
+                            position={[emergency.latitude, emergency.longitude]} 
                             icon={emergencyIcon}
                         >
                             <Popup>
@@ -255,7 +251,7 @@ const EmergencyPage = () => {
                         {!loadingResponders && responders.map(responder => (
                             <Marker 
                                 key={responder.id}
-                                position={[responder.location.latitude, responder.location.longitude]} 
+                                position={[responder.latitude, responder.longitude]} 
                                 icon={getResponderIcon(responder.type)}
                             >
                                 <Popup>
