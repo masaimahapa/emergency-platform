@@ -37,7 +37,7 @@ const ResponderService = {
             if (!isValidResponderStatus(status)) {
                 throw new Error(`Invalid status: ${status}`);
             }
-            const responders = await db.select().from(respondersTable).where(eq(respondersTable.status, 'active'));
+            const responders = await db.select().from(respondersTable).where(eq(respondersTable.status, status));
             return responders as Responder[];
         } else {
             const responders = await db.select().from(respondersTable);
