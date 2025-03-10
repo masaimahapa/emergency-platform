@@ -3,19 +3,45 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import React, { useState, useEffect } from 'react'
 
 import { Emergency } from '@/models/emergency';
+import { Badge } from '@/components/ui/badge';
 
 function Emergencies(){
     const [emergencies, setEmergencies] = useState<Emergency[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchEmergencies = async () => {
-            const response = await fetch('/api/emergency');
+            try {
+                setLoading(true);
+
+                const response = await fetch('/api/emergency');
 
             const data = await response.json();
+        
             setEmergencies(data.data);
+            setLoading(false);
+        } catch (error) {
+            setError('Failed to fetch emergencies');
+            setLoading(false);
         }
-        fetchEmergencies();
+    };
+    fetchEmergencies();
     }, []);
+
+
+
+    if (loading) return (
+        <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+    )
+
+    if (error) return (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        {error}
+    </div>
+    )
     return (
         <div>
             <h1 className='text-2xl font-bold text-center mb-4'>Emergencies</h1>
@@ -35,22 +61,28 @@ function Emergencies(){
                 <TableBody>
                     {emergencies.map((emergency) => {
                         return(
-                            <TableRow key={emergency.id}>
-                                <TableCell>{emergency.id}</TableCell>
+                            <TableRow className='hover:bg-gray-100 hover:cursor-pointer'>
+
                                 <TableCell>
-                                    <Link
-                                    to={`/emergencies/${emergency.id}`}
-                                    >
-                                    {emergency.name}
+                            <Link to={`/emergencies/${emergency.id}`} key={emergency.id}>
+                                    
+                                    {emergency.id}
+                                    
                                     </Link>
+                                    </TableCell>
+                                <TableCell>
+                      
+                                    {emergency.name}
+                        
                                     </TableCell>
                                 <TableCell>{emergency.description}</TableCell>
                                 <TableCell>{emergency.latitude}, {emergency.longitude}</TableCell>
-                                <TableCell>{emergency.status}</TableCell>
+                                <TableCell>
+                                    <Badge variant={emergency.status === 'active' ? 'default' : 'secondary'}>{emergency.status}</Badge></TableCell>
                                 <TableCell>{new Date(emergency.createdAt).toLocaleString()}</TableCell>
                                 <TableCell>{new Date(emergency.updatedAt).toLocaleString()}</TableCell>
-                            </TableRow>
                             
+                            </TableRow>
                         )
                     })}
                     </TableBody>

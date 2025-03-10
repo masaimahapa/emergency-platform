@@ -5,10 +5,12 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import Dashboard from './pages/dashboard.tsx';
 import Emergencies from './pages/emergencies.tsx';
 import Emergency from './pages/emergency.tsx';
+import Layout from './components/layout.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      <Layout>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="emergencies" >
@@ -16,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path=":id" element={<Emergency />} />
         </Route>
       </Routes>
+      </Layout>
     </BrowserRouter>
   </StrictMode>,
 )
