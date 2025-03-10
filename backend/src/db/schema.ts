@@ -18,7 +18,7 @@ export const responderRelations = relations(respondersTable, ({many}) => ({
 
 export const emergenciesTable = sqliteTable('emergencies', {
     id: int().primaryKey({autoIncrement: true}),
-    name: text().notNull(),
+    type: text().notNull(),
     description: text().notNull(),
     latitude: real().notNull(),
     longitude: real().notNull(),

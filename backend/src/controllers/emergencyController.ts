@@ -5,6 +5,7 @@ export const getEmergencies = async (req: Request, res: Response) => {
     try{
         const {status} = req.query;
         const result = await emergencyService.getEmergencies(status as string);
+        console.log(result);
         res.status(200).json({
             message: "Emergencies fetched successfully",
             data: result

@@ -7,7 +7,7 @@ const db = drizzle(process.env.DB_FILE_NAME!);
 
 async function main(){
     const emergency1 : typeof emergenciesTable.$inferInsert = {
-        name: 'Fire',
+        type: 'fire',
         description: 'Fire in the building.',
         latitude:-26.1044,
         longitude: 28.2543,
@@ -15,7 +15,7 @@ async function main(){
     }
 
     const emergency2 : typeof emergenciesTable.$inferInsert = {
-        name: 'Medical',
+        type: 'medical',
         description: 'Old lady collapsed on the street.',
         latitude:-26.1074,
         longitude: 28.0543,
@@ -23,15 +23,25 @@ async function main(){
     }
 
     const emergency3 : typeof emergenciesTable.$inferInsert = {
-        name: 'Police',
+        type: 'medical',
         description: 'Vehicle accident on the highway.',
         latitude:-26.1084,
         longitude: 28.0933,
+        status: 'resolved',
+    }
+
+    const emergency4 : typeof emergenciesTable.$inferInsert = {
+        type: 'police',
+        description: 'Suspicious activity at the bank.',
+        latitude:-26.1094,
+        longitude: 28.0833,
         status: 'active',
     }
+
     await db.insert(emergenciesTable).values(emergency1);
     await db.insert(emergenciesTable).values(emergency2);
     await db.insert(emergenciesTable).values(emergency3);
+    await db.insert(emergenciesTable).values(emergency4);
     console.log('Emergency created successfully');
 
     const responder : typeof respondersTable.$inferInsert = {
@@ -39,7 +49,7 @@ async function main(){
         type: 'security',
         latitude:-27.1074,
         longitude: 28.0543,
-        status: 'active',
+        status: 'offline',
     }
 
     const responder2 : typeof respondersTable.$inferInsert = {
@@ -52,7 +62,7 @@ async function main(){
 
     const responder3 : typeof respondersTable.$inferInsert = {
         name: 'ER24',
-        type: 'ambulance',
+        type: 'medical',
         latitude:-26.1074,
         longitude: 28.0543,
         status: 'active',

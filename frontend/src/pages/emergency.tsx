@@ -84,7 +84,6 @@ const EmergencyPage = () => {
     const [loadingAssignedResponders, setLoadingAssignedResponders] = useState(true);
     const [loadingAvailableResponders, setLoadingAvailableResponders] = useState(true);
 
-    // Function to fetch emergency data
     const fetchEmergency = useCallback(async () => {
         try {
             setLoading(true);
@@ -103,17 +102,14 @@ const EmergencyPage = () => {
         }
     }, [id]);
     
-    // Function to fetch available responders
     const fetchAvailableResponders = useCallback(async () => {
         try {
             setLoadingAvailableResponders(true);
             
-            // Use the real API endpoint instead of mock data
-            const response = await fetch('/api/responders/available');
+            const response = await fetch('/api/responders?status=active');
             const data = await response.json();
             
             if (data.data) {
-                // Filter out responders that are already assigned to this emergency
                 const availableIds = new Set(assignedResponders.map(r => r.id));
                 const filteredResponders = data.data.filter((r: Responder) => !availableIds.has(r.id));
                 setAvailableResponders(filteredResponders);
@@ -126,23 +122,18 @@ const EmergencyPage = () => {
         }
     }, [assignedResponders]);
 
-    // Fetch emergency data
     useEffect(() => {
         fetchEmergency();
     }, [fetchEmergency]);
     
-    // Fetch available responders
     useEffect(() => {
-        // Only fetch available responders after assigned responders are loaded
         if (!loadingAssignedResponders) {
             fetchAvailableResponders();
         }
     }, [loadingAssignedResponders, fetchAvailableResponders]);
     
-    // Function to assign a responder to the emergency
     const assignResponder = async (responderId: number) => {
         try {
-            // API call to assign responder
             const response = await fetch(`/api/emergency/${id}/responders`, {
                 method: 'POST',
                 headers: {
@@ -154,17 +145,13 @@ const EmergencyPage = () => {
             console.log(`Assigning responder ${responderId} to emergency ${id}`);
             
             if (response.ok) {
-                // Find the responder in available responders
                 const responderToAdd = availableResponders.find(r => r.id === responderId);
                 
                 if (responderToAdd) {
-                    // Add to assigned responders
                     setAssignedResponders(prev => [...prev, responderToAdd]);
                     
-                    // Remove from available responders
                     setAvailableResponders(prev => prev.filter(r => r.id !== responderId));
                 } else {
-                    // If we can't find it, refresh the data
                     fetchEmergency();
                 }
             } else {
@@ -175,26 +162,20 @@ const EmergencyPage = () => {
         }
     };
     
-    // Function to remove a responder from the emergency
     const removeResponder = async (responderId: number) => {
         try {
-            // API call to remove responder
             const response = await fetch(`/api/emergency/${id}/responders/${responderId}`, {
                 method: 'DELETE',
             });
             
             if (response.ok) {
-                // Find the responder in assigned responders
                 const responderToRemove = assignedResponders.find(r => r.id === responderId);
                 
                 if (responderToRemove) {
-                    // Remove from assigned responders
                     setAssignedResponders(prev => prev.filter(r => r.id !== responderId));
                     
-                    // Reload available responders
                     fetchAvailableResponders();
                 } else {
-                    // If we can't find it, refresh the data
                     fetchEmergency();
                 }
             } else {
@@ -223,13 +204,11 @@ const EmergencyPage = () => {
         );
     }
 
-    // Calculate responder distances for the component
     const assignedRespondersWithDistance = assignedResponders.map(responder => ({
         ...responder,
         distance: calculateDistance({latitude: emergency.latitude, longitude: emergency.longitude}, {latitude: responder.latitude, longitude: responder.longitude})
     }));
 
-    // Calculate distances and sort available responders
     const sortedAvailableResponders = availableResponders
         .map(responder => ({
             ...responder,
@@ -239,10 +218,8 @@ const EmergencyPage = () => {
         }))
         .sort((a, b) => a.distance - b.distance);
     
-    // Get top 3 closest available responders
     const closestAvailableResponders = sortedAvailableResponders.slice(0, 3);
 
-    // Get icon for responder based on type
     const getResponderIcon = (type: string) => {
         const iconKey = type.toLowerCase() as keyof typeof responderIcons;
         return responderIcons[iconKey] || responderIcons.default;
@@ -259,13 +236,12 @@ const EmergencyPage = () => {
             </h1>
             
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-                {/* Emergency details */}
                 <div className='bg-white shadow-md rounded-lg p-4'>
                     <h2 className='text-lg font-bold mb-2'>Emergency Information</h2>
                     <div className='space-y-2'>
                         <div>
-                            <p className='font-medium'>Name</p>
-                            <p className='text-gray-700'>{emergency.name}</p>
+                            <p className='font-medium'>Type</p>
+                            <p className='text-gray-700'>{emergency.type}</p>
                         </div>
                         <div>
                             <p className='font-medium'>Description</p>
@@ -292,7 +268,6 @@ const EmergencyPage = () => {
                     </div>
                 </div>
 
-                {/* Assigned Responders Section */}
                 <div className="bg-white shadow-md rounded-lg p-4">
                     <h2 className="text-lg font-bold mb-4">Assigned Responders</h2>
                     
@@ -336,7 +311,6 @@ const EmergencyPage = () => {
                 </div>
             </div>
             
-            {/* Closest Available Responders */}
             <div className="bg-white shadow-md rounded-lg p-4 mt-4">
                 <h2 className="text-lg font-bold mb-4">Closest Available Responders</h2>
                 
@@ -375,7 +349,6 @@ const EmergencyPage = () => {
                 )}
             </div>
 
-            {/* Map section - full width */}
             <div className='bg-white shadow-md rounded-lg p-4 mt-4'>
                 <h2 className='text-lg font-bold mb-2'>Response Map</h2>
                 
@@ -447,7 +420,6 @@ const EmergencyPage = () => {
                             </Marker>
                         ))}
                         
-                        {/* Available Responder markers */}
                         {!loadingAvailableResponders && closestAvailableResponders.map(responder => (
                             <Marker 
                                 key={`available-${responder.id}`}

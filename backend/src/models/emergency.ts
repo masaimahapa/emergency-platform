@@ -19,7 +19,7 @@ const db = drizzle(process.env.DB_FILE_NAME!, {schema})
 // }
 
 export interface BaseEmergency {
-    name: string;
+    type: string;
     description: string;
     latitude: number;
     longitude: number;
@@ -50,8 +50,8 @@ const EmergencyService = {
         return emergency[0];
     },
     createEmergency: async (emergency: EmergencyInput): Promise<Emergency> => {
-        if (!emergency.name || emergency.name.trim() === '') {
-            throw new Error('Emergency name is required');
+        if (!emergency.type || emergency.type.trim() === '') {
+            throw new Error('Emergency type is required');
         }
         
         if (!emergency.description || emergency.description.trim() === '') {
@@ -65,7 +65,7 @@ const EmergencyService = {
 
         return {
             id: 1, 
-            name: emergency.name,
+            type: emergency.type,
             description: emergency.description,
             latitude: emergency.latitude,
             longitude: emergency.longitude,
@@ -77,7 +77,7 @@ const EmergencyService = {
     updateEmergency: async (id: string, emergency: EmergencyInput): Promise<Emergency> => {
         return {
             id: 1,
-            name: emergency.name,
+            type: emergency.type,
             description: emergency.description,
             latitude: emergency.latitude,
             longitude: emergency.longitude,

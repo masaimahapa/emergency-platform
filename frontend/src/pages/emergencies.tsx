@@ -50,7 +50,7 @@ function Emergencies(){
                 <TableHeader>
                     <TableRow>
                         <TableHead>ID</TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead>Location</TableHead>
                         <TableHead>Status</TableHead>
@@ -72,13 +72,13 @@ function Emergencies(){
                                     </TableCell>
                                 <TableCell>
                       
-                                    {emergency.name}
+                                    {emergency.type}
                         
                                     </TableCell>
                                 <TableCell>{emergency.description}</TableCell>
                                 <TableCell>{emergency.latitude}, {emergency.longitude}</TableCell>
                                 <TableCell>
-                                    <Badge variant={emergency.status === 'active' ? 'default' : 'secondary'}>{emergency.status}</Badge></TableCell>
+                                    <Badge variant={emergency.status === 'active' ? 'destructive' : 'default'}>{emergency.status}</Badge></TableCell>
                                 <TableCell>{new Date(emergency.createdAt).toLocaleString()}</TableCell>
                                 <TableCell>{new Date(emergency.updatedAt).toLocaleString()}</TableCell>
                             

@@ -11,7 +11,7 @@ import { Responder } from './responder';
 // }
 
 export interface BaseEmergency {
-    name: string;
+    type: string;
     description: string;
     latitude: number;
     longitude: number;
