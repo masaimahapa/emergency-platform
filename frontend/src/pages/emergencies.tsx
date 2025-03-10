@@ -23,6 +23,7 @@ function Emergencies(){
                 <TableCaption>View Emergencies</TableCaption>
                 <TableHeader>
                     <TableRow>
+                        <TableHead>ID</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead>Location</TableHead>
@@ -35,6 +36,7 @@ function Emergencies(){
                     {emergencies.map((emergency) => {
                         return(
                             <TableRow key={emergency.id}>
+                                <TableCell>{emergency.id}</TableCell>
                                 <TableCell>
                                     <Link
                                     to={`/emergencies/${emergency.id}`}
