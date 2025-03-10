@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Responder} from '@/models/responder';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 
 function RespondersPage(){
     const [responders, setResponders] = useState<Responder[]>([]);

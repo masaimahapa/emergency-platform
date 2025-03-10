@@ -389,7 +389,7 @@ const EmergencyPage = () => {
                             icon={emergencyIcon}
                         >
                             <Popup>
-                                <strong>{emergency.name}</strong><br />
+                                <strong>{emergency.type}</strong><br />
                                 {emergency.description}
                             </Popup>
                             <Tooltip permanent>Emergency Site</Tooltip>

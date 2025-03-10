@@ -4,18 +4,23 @@ import React, { useState, useEffect } from 'react'
 
 import { Emergency } from '@/models/emergency';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger ,SelectValue} from '@/components/ui/select';
 
 function Emergencies(){
     const [emergencies, setEmergencies] = useState<Emergency[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    const [filter, setFilter] = useState('all');
     useEffect(() => {
         const fetchEmergencies = async () => {
             try {
                 setLoading(true);
 
-                const response = await fetch('/api/emergency');
+                let url = '/api/emergency';
+                if (filter !== 'all') {
+                    url += `?status=${filter}`;
+                }
+                const response = await fetch(url);
 
             const data = await response.json();
         
@@ -27,7 +32,11 @@ function Emergencies(){
         }
     };
     fetchEmergencies();
-    }, []);
+    }, [filter]);
+
+    const handleFilterChange = (value: string) => {
+        setFilter(value);
+    }
 
 
 
@@ -45,6 +54,19 @@ function Emergencies(){
     return (
         <div>
             <h1 className='text-2xl font-bold text-center mb-4'>Emergencies</h1>
+            <Select onValueChange={handleFilterChange} value={filter}>
+                <SelectTrigger>
+                    <SelectValue placeholder='Filter by status' />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                    <SelectLabel>Status</SelectLabel>
+                    <SelectItem value='all'>All</SelectItem>
+                    <SelectItem value='active'>Active</SelectItem>
+                    <SelectItem value='resolved'>Resolved</SelectItem>
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
             <Table>
                 <TableCaption>View Emergencies</TableCaption>
                 <TableHeader>
