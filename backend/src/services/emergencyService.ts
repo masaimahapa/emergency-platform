@@ -1,9 +1,9 @@
 import Emergency, { EmergencyInput } from "../models/emergency";
 
 const emergencyService = {
-    getEmergencies: async () => {
+    getEmergencies: async (status?: string) => {
         try {
-            const result = await Emergency.getEmergencies();
+            const result = await Emergency.getEmergencies(status);
             return result;
         } catch (error) {
             throw error;

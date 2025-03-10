@@ -5,12 +5,22 @@ import 'dotenv/config';
 
 const db = drizzle(process.env.DB_FILE_NAME!);
 
+export enum ResponderStatus {
+    ACTIVE = 'active',
+    ASSIGNED = 'assigned',
+    OFFLINE = 'offline',
+}
+
 export interface BaseResponder {
     name: string;
     type: string;
     latitude: number;
     longitude: number;
     status: string;
+}
+
+const isValidResponderStatus = (status: string): boolean => {
+    return Object.values(ResponderStatus).includes(status as ResponderStatus);
 }
 
 export interface ResponderInput extends BaseResponder {}
@@ -22,9 +32,17 @@ export interface Responder extends BaseResponder {
 }
 
 const ResponderService = {
-    getResponders: async (): Promise<Responder[]> => {
-        const responders = await db.select().from(respondersTable);
-        return responders as Responder[];
+    getResponders: async (status: string): Promise<Responder[]> => {
+        if (status) {
+            if (!isValidResponderStatus(status)) {
+                throw new Error(`Invalid status: ${status}`);
+            }
+            const responders = await db.select().from(respondersTable).where(eq(respondersTable.status, 'active'));
+            return responders as Responder[];
+        } else {
+            const responders = await db.select().from(respondersTable);
+            return responders as Responder[];
+        }
     },
     
     getResponderById: async (id: string): Promise<Responder> => {
@@ -35,23 +53,6 @@ const ResponderService = {
         return responder[0] as Responder;
     },
     
-    getAvailableResponders: async (): Promise<Responder[]> => {
-        const responders = await db.select()
-            .from(respondersTable)
-            .where(eq(respondersTable.status, 'active'));
-        
-        // Map to ensure the format matches what the frontend expects
-        return responders.map(responder => ({
-            id: responder.id,
-            name: responder.name,
-            type: responder.type,
-            latitude: responder.latitude,
-            longitude: responder.longitude,
-            status: responder.status,
-            createdAt: responder.createdAt || Date.now(),
-            updatedAt: responder.updatedAt || Date.now()
-        }));
-    },
     
     createResponder: async (responder: ResponderInput): Promise<Responder> => {
         await db.insert(respondersTable).values(responder);
@@ -77,6 +78,9 @@ const ResponderService = {
     },
     
     updateResponderStatus: async (id: string, status: string): Promise<Responder> => {
+        if (!isValidResponderStatus(status)) {
+            throw new Error(`Invalid status: ${status}`);
+        }
         await db.update(respondersTable)
             .set({ status })
             .where(eq(respondersTable.id, parseInt(id)));

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import responderService from '../services/responderService';
 
 export const getResponders = async (req: Request, res: Response) => {
+    const {status} = req.query;
     try {
-        const responders = await responderService.getResponders();
+        const responders = await responderService.getResponders(status as string);
         res.status(200).json({
             message: "Responders fetched successfully",
             data: responders
@@ -30,19 +31,6 @@ export const getResponderById = async (req: Request, res: Response) => {
     }
 };
 
-export const getAvailableResponders = async (req: Request, res: Response) => {
-    try {
-        const responders = await responderService.getAvailableResponders();
-        res.status(200).json({
-            message: "Available responders fetched successfully",
-            data: responders
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: "Error fetching available responders"
-        });
-    }
-};
 
 export const createResponder = async (req: Request, res: Response) => {
     try {

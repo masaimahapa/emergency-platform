@@ -36,63 +36,18 @@ export interface Emergency extends BaseEmergency {
 }
 
 const EmergencyService = {
-    getEmergencies: async (): Promise<Emergency[]> => {
-        const emergenciesList = await db.select().from(emergenciesTable);
-        return emergenciesList;
-        // return [
-        //     {
-        //         id: 1,
-        //         name: "Fire",
-        //         description: "A fire has started at Carlton Center in Joburg CBD.",
-        //         location: {
-        //             latitude: -26.1074,
-        //             longitude: 28.0543
-        //         },
-        //         status: EmergencyStatus.ACTIVE,
-        //         createdAt: "2025-03-09",
-        //         updatedAt: "2025-03-09"
-        //     },
-        //     {
-        //         id: 2,
-        //         name: "House Break-in",
-        //         description: "A house break-in has occurred at 123 Main St, Johannesburg.",
-        //         location: {
-        //             latitude: -26.1074,
-        //             longitude: 28.0543
-        //         },
-        //         status: EmergencyStatus.ACTIVE,
-        //         createdAt: "2025-03-09",
-        //         updatedAt: "2025-03-09"
-        //     },
-        //     {
-        //         id: 3,
-        //         name: "Car Accident",
-        //         description: "A car accident has occurred on the N1 highway near Sandton.",
-        //         location: {
-        //             latitude: -26.1074,
-        //             longitude: 28.0543
-        //         },
-        //         status: EmergencyStatus.ACTIVE,
-        //         createdAt: "2025-03-09",
-        //         updatedAt: "2025-03-09"
-        //     }
-        // ]
+    getEmergencies: async (status?: string): Promise<Emergency[]> => {
+        if (status) {
+            const emergenciesList = await db.select().from(emergenciesTable).where(eq(emergenciesTable.status, status));
+            return emergenciesList;
+        } else {
+            const emergenciesList = await db.select().from(emergenciesTable);
+            return emergenciesList;
+        }
     },
     getEmergencyById: async (id: string): Promise<Emergency> => {
         const emergency = await db.select().from(emergenciesTable).where(eq(emergenciesTable.id, parseInt(id)))
         return emergency[0];
-        // return {
-        //     id: 1,
-        //     name: "Fire by ID",
-        //     description: "A fire has started at Carlton Center in Joburg CBD.",
-    
-        //         latitude: -26.1074,
-        //         longitude: 28.0543,
-   
-        //     status: 'active',
-        //     createdAt: 1715222400,
-        //     updatedAt: 1715222400
-        // }
     },
     createEmergency: async (emergency: EmergencyInput): Promise<Emergency> => {
         if (!emergency.name || emergency.name.trim() === '') {

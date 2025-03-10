@@ -2,7 +2,6 @@ import { Router } from 'express';
 import {
     getResponders,
     getResponderById,
-    getAvailableResponders,
     createResponder,
     updateResponder,
     updateResponderStatus
@@ -11,7 +10,6 @@ import {
 const router = Router();
 
 router.get('/', getResponders);
-router.get('/available', getAvailableResponders);
 router.get('/:id', getResponderById);
 router.post('/', createResponder);
 router.put('/:id', updateResponder);

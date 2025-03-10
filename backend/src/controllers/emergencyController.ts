@@ -3,7 +3,8 @@ import emergencyService from "../services/emergencyService";
 
 export const getEmergencies = async (req: Request, res: Response) => {
     try{
-        const result = await emergencyService.getEmergencies();
+        const {status} = req.query;
+        const result = await emergencyService.getEmergencies(status as string);
         res.status(200).json({
             message: "Emergencies fetched successfully",
             data: result

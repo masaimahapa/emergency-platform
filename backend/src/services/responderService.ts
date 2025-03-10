@@ -1,9 +1,9 @@
 import Responder, { ResponderInput } from '../models/responder';
 
 const responderService = {
-    getResponders: async () => {
+    getResponders: async (status: string) => {
         try {
-            const result = await Responder.getResponders();
+            const result = await Responder.getResponders(status);
             return result;
         } catch (error) {
             throw error;
@@ -19,14 +19,6 @@ const responderService = {
         }
     },
     
-    getAvailableResponders: async () => {
-        try {
-            const result = await Responder.getAvailableResponders();
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    },
     
     createResponder: async (responder: ResponderInput) => {
         try {
