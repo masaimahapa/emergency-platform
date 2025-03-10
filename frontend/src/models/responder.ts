@@ -7,12 +7,12 @@ export interface Responder {
   id: number;
   name: string;
   type: string; // e.g., "fire", "medical", "police"
+  status: 'active' | 'assigned' | 'offline';
   latitude: number;
   longitude: number;
-  status: string;
   phoneNumber?: string;
   createdAt?: number;
-  updatedAt?: number;
+  updatedAt: string;
 }
 
 // export enum ResponderStatus {

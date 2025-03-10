@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { Emergency, EmergencyResponse } from '@/models/emergency.ts';
 import { Link } from 'react-router';
@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Responder } from '@/models/responder';
 import { calculateDistance } from '@/lib/utils';
-
+import Loader from '@/components/loader';
 // Fix Leaflet's default icon issue
 const defaultIcon = L.icon({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -187,11 +187,7 @@ const EmergencyPage = () => {
     };
 
     if (loading) {
-        return (
-            <div className='container mx-auto p-4 text-center'>
-                <div className='animate-pulse'>Loading emergency details...</div>
-            </div>
-        );
+        return <Loader />;
     }
 
     if (!emergency) {
@@ -286,7 +282,11 @@ const EmergencyPage = () => {
                                 >
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="font-medium">{responder.name}</h3>
+                                            <h3 className="font-medium">
+                                                <Link to={`/responders/${responder.id}`}>
+                                                    {responder.name}
+                                                </Link>
+                                            </h3>
                                             <p className="text-sm text-gray-600 capitalize">{responder.type}</p>
                                             <p className="text-sm text-gray-600 mt-1">
                                                 <span className="font-medium">{responder.distance.toFixed(2)} km</span> from emergency
@@ -330,7 +330,11 @@ const EmergencyPage = () => {
                             >
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h3 className="font-medium">{responder.name}</h3>
+                                        <h3 className="font-medium">
+                                            <Link to={`/responders/${responder.id}`}>
+                                                {responder.name}
+                                            </Link>
+                                        </h3>
                                         <p className="text-sm text-gray-600 capitalize">{responder.type}</p>
                                         <p className="text-sm text-gray-600 mt-1">
                                             <span className="font-medium">{responder.distance.toFixed(2)} km</span> away
