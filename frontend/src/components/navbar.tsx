@@ -10,6 +10,10 @@ function Navbar(){
         {
             name: 'Emergencies',
             path: '/emergencies'
+        },
+        {
+            name: 'Responders',
+            path: '/responders'
         }
     ]
     return(

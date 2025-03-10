@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {Emergency} from '@/models/emergency';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import StatCard from '@/components/stat-card';
 
 function Dashboard(){
     const [activeEmergencies, setActiveEmergencies] = useState<Emergency[]>([]);
@@ -45,33 +46,9 @@ fetchData();
 </header>
 
 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-<Card>
-    <CardHeader>
-        <CardTitle>Active Emergencies</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <span className='text-2xl font-bold'>{stats.activeEmergencies}</span>
-    </CardContent>
-</Card>
-
-<Card>
-    <CardHeader>
-        <CardTitle>Total Responders</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <span className='text-2xl font-bold'>{stats.totalResponders}</span>
-    </CardContent>
-</Card>
-
-<Card>
-    <CardHeader>
-        <CardTitle>Available Responders</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <span className='text-2xl font-bold'>{stats.availableResponders}</span>
-    </CardContent>
-</Card>
-
+<StatCard title='Active Emergencies' value={stats.activeEmergencies} />
+<StatCard title='Total Responders' value={stats.totalResponders} />
+<StatCard title='Available Responders' value={stats.availableResponders} />
 </div>
         </div>
     )
