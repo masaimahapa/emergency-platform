@@ -1,22 +1,11 @@
-import { getEmergencies } from '@/controllers/emergencyController';
 import { emergenciesTable, responderEmergenciesTable, respondersTable } from '../db/schema';
 import 'dotenv/config';
 import { eq, and } from 'drizzle-orm';
 import {drizzle} from 'drizzle-orm/libsql';
-// import {emergenciesTable} from '../db/schema';
 import * as schema from '../db/schema';
 
 const db = drizzle(process.env.DB_FILE_NAME!, {schema})
 
-// interface Location {
-//     latitude: number;
-//     longitude: number;
-// }
-
-// enum EmergencyStatus {
-//     ACTIVE = "active",
-//     RESOLVED = "resolved"
-// }
 
 export interface BaseEmergency {
     type: string;
@@ -88,7 +77,6 @@ const EmergencyService = {
     },
     getEmergencyWithResponders: async (id: string): Promise<Emergency & {responders: schema.Responder[]}> => {
 
-        // Get the emergency first
         const emergency = await db.query.emergenciesTable.findFirst({
             where: eq(emergenciesTable.id, parseInt(id)),
             with: {
@@ -104,7 +92,6 @@ const EmergencyService = {
             throw new Error(`Emergency with ID ${id} not found`);
         }
         
-        // Transform the responderEmergencies to just responders array
         let transformedEmergency = {
             ...emergency,
             responders: emergency.responderEmergencies
@@ -119,17 +106,14 @@ const EmergencyService = {
     assignResponderToEmergency: async (emergencyId: string, responderId: string | number): Promise<void> => {
         console.log(`Model: Assigning responder ${responderId} to emergency ${emergencyId}`);
         
-        // Convert IDs to integers for database operations
         const emergencyIdNum = parseInt(String(emergencyId));
         const responderIdNum = parseInt(String(responderId));
         
-        // Create the relationship
         await db.insert(responderEmergenciesTable).values({
             emergencyId: emergencyIdNum,
             responderId: responderIdNum
         });
         
-        // Update responder status to 'assigned'
         await db.update(respondersTable)
             .set({ status: 'assigned' })
             .where(eq(respondersTable.id, responderIdNum));
@@ -137,11 +121,9 @@ const EmergencyService = {
     removeResponderFromEmergency: async (emergencyId: string, responderId: string | number): Promise<void> => {
         console.log(`Model: Removing responder ${responderId} from emergency ${emergencyId}`);
         
-        // Convert IDs to integers for database operations
         const emergencyIdNum = parseInt(String(emergencyId));
         const responderIdNum = parseInt(String(responderId));
         
-        // Remove the relationship
         await db.delete(responderEmergenciesTable)
             .where(
                 and(
@@ -150,7 +132,6 @@ const EmergencyService = {
                 )
             );
             
-        // Update responder status back to 'active'
         await db.update(respondersTable)
             .set({ status: 'active' })
             .where(eq(respondersTable.id, responderIdNum));

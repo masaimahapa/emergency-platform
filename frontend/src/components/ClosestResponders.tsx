@@ -39,7 +39,6 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
     fetchResponders();
   }, []);
 
-  // Calculate distances and sort responders
   const sortedResponders = responders
     .filter(responder => responder.status === 'active')
     .filter(responder => !emergencyType || responder.type === emergencyType.toLowerCase())
@@ -51,7 +50,7 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
     }))
     .sort((a, b) => a.distance - b.distance);
   
-  const closestResponders = sortedResponders.slice(0, 3); // Get top 3 closest
+  const closestResponders = sortedResponders.slice(0, 3); 
 
   if (loading) return <div className="p-4 text-center">Loading responders...</div>;
   

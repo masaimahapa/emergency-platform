@@ -65,8 +65,8 @@ export const updateEmergency = async (req: Request, res: Response) => {
 
 export const assignResponderToEmergency = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;  // Get emergency ID from URL
-        const { responderId } = req.body;  // Get responder ID from body
+        const { id } = req.params;  
+        const { responderId } = req.body;  
         
         console.log(`Assigning responder ${responderId} to emergency ${id}`);
         

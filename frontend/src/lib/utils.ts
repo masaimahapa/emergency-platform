@@ -12,12 +12,11 @@ interface Coordinates {
 
 
 export function calculateDistance(point1: Coordinates, point2: Coordinates): number {
-  // Validate that both points have valid coordinates
   if (!point1 || !point2 || 
       point1.latitude === undefined || point1.longitude === undefined ||
       point2.latitude === undefined || point2.longitude === undefined) {
     console.warn('Invalid coordinates provided to calculateDistance');
-    return Infinity; // Return a large value so invalid entries sort to the end
+    return Infinity; 
   }
   
   const R = 6371; // Earth's radius in kilometers
