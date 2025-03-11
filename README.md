@@ -73,7 +73,7 @@ The project is split into two main parts:
    npm run dev
    ```
 
-4. Open your browser and visit the local development server URL (typically http://localhost:5173)
+4. Open your browser and visit the local development server URL (http://localhost:5173)
 
 ## Development
 
