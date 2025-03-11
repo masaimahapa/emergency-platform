@@ -2,6 +2,9 @@
 
 This is a platform for managing emergency responses, tracking responders, and coordinating emergency operations.
 
+## Live Demo
+You can go to this app on: [this link](https://emergency-platform-frontend.onrender.com/)
+
 ## Overview
 
 This application enables emergency service providers to:
