@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {Responder} from '@/models/responder';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MapPlots, { MapMarker } from '@/components/map-plots';
@@ -14,6 +14,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 function RespondersPage(){
     const [responders, setResponders] = useState<Responder[]>([]);
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState('all');
@@ -117,16 +118,12 @@ function RespondersPage(){
                         </TableHeader>
                         <TableBody>
                             {responders.map((responder) => (
-                                <TableRow key={responder.id}>
+                                <TableRow key={responder.id} onClick={()=> navigate(`/responders/${responder.id}`)}>
                                     <TableCell>
-                                        <Link to={`/responders/${responder.id}`}>
-                                            {responder.id}
-                                        </Link>
+                                        {responder.id}
                                     </TableCell>
                                     <TableCell>
-                                        <Link to={`/responders/${responder.id}`}>
-                                            {responder.name}
-                                        </Link>
+                                        {responder.name}
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant={responder.status === 'active' ? 'default' : 'destructive'}>

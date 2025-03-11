@@ -46,7 +46,7 @@ const fetchData = async () => {
         const respondersData = await respondersResponse.json();
 
         const availableResponders = respondersData.data.filter((responder: any) => responder.status === 'active');
-        debugger;
+
         
         setActiveEmergencies(emergenciesData.data);
         setStats({

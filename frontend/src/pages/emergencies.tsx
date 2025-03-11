@@ -1,4 +1,4 @@
-import {Link} from 'react-router';
+import {Link, useNavigate} from 'react-router';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useState, useEffect } from 'react'
 import { Emergency } from '@/models/emergency';
@@ -13,6 +13,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 function Emergencies(){
     const [emergencies, setEmergencies] = useState<Emergency[]>([]);
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState('all');
@@ -122,11 +123,9 @@ function Emergencies(){
                         <TableBody>
                             {emergencies.map((emergency) => {
                                 return(
-                                    <TableRow className='hover:bg-gray-100 hover:cursor-pointer'>
+                                    <TableRow className='hover:bg-gray-100 hover:cursor-pointer' onClick={()=> navigate(`/emergencies/${emergency.id}`)}>
                                         <TableCell>
-                                            <Link to={`/emergencies/${emergency.id}`} key={emergency.id}>
-                                                {emergency.id}
-                                            </Link>
+                                            {emergency.id}
                                         </TableCell>
                                         <TableCell>{emergency.type}</TableCell>
                                         <TableCell>{emergency.description}</TableCell>
