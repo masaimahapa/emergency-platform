@@ -9,6 +9,8 @@ import MapPlots, { MapMarker } from '@/components/map-plots';
 import { createCustomIcon, getMapBounds } from '@/lib/utils';
 import Loader from '@/components/loader';
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function Emergencies(){
     const [emergencies, setEmergencies] = useState<Emergency[]>([]);
     const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ function Emergencies(){
         const fetchEmergencies = async () => {
             try {
                 setLoading(true);
-                let url = '/api/emergency';
+                let url = `${backendUrl}/api/emergency`;
                 if (filter !== 'all') {
                     url += `?status=${filter}`;
                 }

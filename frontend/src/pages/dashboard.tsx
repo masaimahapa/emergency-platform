@@ -21,6 +21,7 @@ const defaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = defaultIcon;
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 function Dashboard(){
     const [activeEmergencies, setActiveEmergencies] = useState<Emergency[]>([]);
     const [loading, setLoading] = useState(true);
@@ -34,15 +35,14 @@ function Dashboard(){
     const [emergencyMarkers, setEmergencyMarkers] = useState<MapMarker[]>([]);
 
 
-
     useEffect(() =>{
 const fetchData = async () => {
     try{
         setLoading(true);
-        const emergenciesResponse = await fetch('/api/emergency?status=active');
+        const emergenciesResponse = await fetch(`${backendUrl}/api/emergency?status=active`);
         const emergenciesData = await emergenciesResponse.json();
 
-        const respondersResponse = await fetch('/api/responders');
+        const respondersResponse = await fetch(`${backendUrl}/api/responders`);
         const respondersData = await respondersResponse.json();
 
         const availableResponders = respondersData.data.filter((responder: any) => responder.status === 'active');

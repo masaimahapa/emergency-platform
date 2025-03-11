@@ -8,6 +8,9 @@ import 'leaflet/dist/leaflet.css';
 import { getMapBounds } from "@/lib/utils";
 
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
 const responderIcons = {
     fire: L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -61,7 +64,7 @@ function ResponderDetailsPage() {
     useEffect(() => {
         const fetchResponder = async () => {
             try {
-                const response = await fetch(`/api/responders/${id}`);
+                const response = await fetch(`${backendUrl}/api/responders/${id}`);
                 const data: ResponderResponse = await response.json();
                 const responderData = data.data as Responder;
                 setResponder(responderData);
@@ -99,7 +102,7 @@ function ResponderDetailsPage() {
 
     const updateResponderStatus = async (newStatus: 'active' | 'assigned' | 'offline') => {
         try {
-            const response = await fetch(`/api/responders/${id}/status`, {
+            const response = await fetch(`${backendUrl}/api/responders/${id}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

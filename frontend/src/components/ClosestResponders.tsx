@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Responder } from '@/models/responder';
 import { calculateDistance } from '@/lib/utils';
 
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 interface ClosestRespondersProps {
   emergencyLocation: {latitude: number, longitude: number};
-  emergencyType?: string; // Optional, for filtering responders by type
+  emergencyType?: string;
 }
 
 const ClosestResponders: React.FC<ClosestRespondersProps> = ({ 
@@ -21,8 +21,7 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
     const fetchResponders = async () => {
       try {
         setLoading(true);
-        // Fetch available responders from API
-        const response = await fetch('/api/responders/available');
+        const response = await fetch(`${backendUrl}/api/responders/available`);
         const data = await response.json();
         
         if (data.data) {

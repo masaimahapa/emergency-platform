@@ -8,7 +8,9 @@ import L from 'leaflet';
 import { Responder } from '@/models/responder';
 import { calculateDistance } from '@/lib/utils';
 import Loader from '@/components/loader';
-// Fix Leaflet's default icon issue
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const defaultIcon = L.icon({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -19,7 +21,6 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-// Create responder icons for different types
 const responderIcons = {
   fire: L.icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -87,7 +88,7 @@ const EmergencyPage = () => {
     const fetchEmergency = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/emergency/${id}/responders`);
+            const response = await fetch(`${backendUrl}/api/emergency/${id}/responders`);
             const data : EmergencyResponse = await response.json();
             setEmergency(data.data);
             if (data.data.responders) {
@@ -106,7 +107,7 @@ const EmergencyPage = () => {
         try {
             setLoadingAvailableResponders(true);
             
-            const response = await fetch('/api/responders?status=active');
+            const response = await fetch(`${backendUrl}/api/responders?status=active`);
             const data = await response.json();
             
             if (data.data) {
@@ -134,7 +135,7 @@ const EmergencyPage = () => {
     
     const assignResponder = async (responderId: number) => {
         try {
-            const response = await fetch(`/api/emergency/${id}/responders`, {
+            const response = await fetch(`${backendUrl}/api/emergency/${id}/responders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -164,7 +165,7 @@ const EmergencyPage = () => {
     
     const removeResponder = async (responderId: number) => {
         try {
-            const response = await fetch(`/api/emergency/${id}/responders/${responderId}`, {
+            const response = await fetch(`${backendUrl}/api/emergency/${id}/responders/${responderId}`, {
                 method: 'DELETE',
             });
             

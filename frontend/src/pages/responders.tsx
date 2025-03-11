@@ -9,6 +9,9 @@ import MapPlots, { MapMarker } from '@/components/map-plots';
 import { createResponderIcon, getMapBounds } from '@/lib/utils';
 import Loader from '@/components/loader';
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
 function RespondersPage(){
     const [responders, setResponders] = useState<Responder[]>([]);
     const [loading, setLoading] = useState(true);
@@ -20,7 +23,7 @@ function RespondersPage(){
         const fetchResponders = async () => {
             try{
                 setLoading(true);
-                let url = '/api/responders';
+                let url = `${backendUrl}/api/responders`;
                 if (filter !== 'all') {
                     url += `?status=${filter}`;
                 }
