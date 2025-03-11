@@ -4,77 +4,12 @@ import { Emergency, EmergencyResponse } from '@/models/emergency.ts';
 import { Link } from 'react-router';
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import { Responder } from '@/models/responder';
-import { calculateDistance } from '@/lib/utils';
+import { calculateDistance, createEmergencyIcon, getResponderIcon } from '../lib/utils';
 import Loader from '@/components/loader';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-const defaultIcon = L.icon({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-const responderIcons = {
-  fire: L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  }),
-  medical: L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  }),
-  police: L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  }),
-  rescue: L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  }),
-  default: L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  })
-};
-
-// Emergency icon
-const emergencyIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [35, 57], // Slightly larger to make it stand out
-  iconAnchor: [17, 57],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-L.Marker.prototype.options.icon = defaultIcon;
 
 const EmergencyPage = () => {
     const {id} = useParams();
@@ -216,11 +151,6 @@ const EmergencyPage = () => {
         .sort((a, b) => a.distance - b.distance);
     
     const closestAvailableResponders = sortedAvailableResponders.slice(0, 3);
-
-    const getResponderIcon = (type: string) => {
-        const iconKey = type.toLowerCase() as keyof typeof responderIcons;
-        return responderIcons[iconKey] || responderIcons.default;
-    };
 
     return (
         <div className='container mx-auto p-4'>
@@ -388,10 +318,9 @@ const EmergencyPage = () => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         
-                        {/* Emergency location marker */}
                         <Marker 
                             position={[emergency.latitude, emergency.longitude]} 
-                            icon={emergencyIcon}
+                            icon={createEmergencyIcon(emergency.type)}
                         >
                             <Popup>
                                 <strong>{emergency.type}</strong><br />
@@ -400,7 +329,6 @@ const EmergencyPage = () => {
                             <Tooltip permanent>Emergency Site</Tooltip>
                         </Marker>
                         
-                        {/* Assigned Responder markers */}
                         {!loadingAssignedResponders && assignedResponders.map(responder => (
                             <Marker 
                                 key={responder.id}
@@ -430,7 +358,7 @@ const EmergencyPage = () => {
                                 key={`available-${responder.id}`}
                                 position={[responder.latitude, responder.longitude]} 
                                 icon={getResponderIcon(responder.type)}
-                                opacity={0.6} // Make available responders slightly transparent
+                                opacity={0.6} 
                             >
                                 <Popup>
                                     <strong>{responder.name}</strong><br />

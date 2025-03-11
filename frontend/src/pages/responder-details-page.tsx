@@ -3,56 +3,14 @@ import { useParams, Link } from "react-router";
 import { Responder, ResponderResponse } from "@/models/responder";
 import Loader from "@/components/loader";
 import MapPlots, { MapMarker } from "@/components/map-plots";
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getMapBounds } from "@/lib/utils";
+import { getMapBounds, getResponderIcon } from "@/lib/utils";
 
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
-const responderIcons = {
-    fire: L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    }),
-    medical: L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    }),
-    police: L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    }),
-    rescue: L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    }),
-    default: L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    })
-};
+
 
 function ResponderDetailsPage() {
     const { id } = useParams();
@@ -73,7 +31,7 @@ function ResponderDetailsPage() {
                     id: responderData.id,
                     latitude: responderData.latitude,
                     longitude: responderData.longitude,
-                    icon: getResponderIcon(responderData.type),
+                    icon: getResponderIcon(responderData.type, responderData.status === 'active' ? 'green' : 'gray'),
                     popupContent: (
                         <div>
                             <strong>{responderData.name}</strong><br />
@@ -121,10 +79,6 @@ function ResponderDetailsPage() {
         }
     };
 
-    const getResponderIcon = (type: string) => {
-        const iconKey = type.toLowerCase() as keyof typeof responderIcons;
-        return responderIcons[iconKey] || responderIcons.default;
-    };
 
     if (loading) {
         return <Loader />;

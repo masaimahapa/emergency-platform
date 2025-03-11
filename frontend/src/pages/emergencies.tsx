@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MapPlots, { MapMarker } from '@/components/map-plots';
-import { createCustomIcon, getMapBounds } from '@/lib/utils';
+import {    getMapBounds, createEmergencyIcon } from '@/lib/utils';
 import Loader from '@/components/loader';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -46,7 +46,7 @@ function Emergencies(){
             id: emergency.id,
             latitude: emergency.latitude,
             longitude: emergency.longitude,
-            icon: createCustomIcon(emergency.type),
+            icon: createEmergencyIcon(emergency.type),
             popupContent: (
                 <div>
                     <h3>{emergency.type}</h3>

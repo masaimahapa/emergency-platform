@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MapPlots, { MapMarker } from '@/components/map-plots';
-import { createResponderIcon, getMapBounds } from '@/lib/utils';
+import { getMapBounds, getResponderIcon } from '@/lib/utils';
 import Loader from '@/components/loader';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -45,7 +45,7 @@ function RespondersPage(){
             id: responder.id,
             latitude: responder.latitude,
             longitude: responder.longitude,
-            icon: createResponderIcon(responder.type, responder.status === 'active' ? 'green' : 'gray'),
+            icon: getResponderIcon(responder.type, responder.status === 'active' ? 'green' : 'gray'),
             popupContent: (
                 <div>
                     <h3>{responder.name}</h3>

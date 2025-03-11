@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import Loader from '@/components/loader';
 import MapPlots from '@/components/map-plots';
 import { MapMarker } from '@/components/map-plots';
-import { createCustomIcon, getMapBounds } from '@/lib/utils';
+import { createEmergencyIcon, getMapBounds } from '@/lib/utils';
 const defaultIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
@@ -68,7 +68,7 @@ fetchData();
             id: emergency.id,
             latitude: emergency.latitude,
             longitude: emergency.longitude,
-            icon: createCustomIcon(emergency.type),
+            icon: createEmergencyIcon(emergency.type),
             popupContent: (
                 <div>
                     <h3>{emergency.type}</h3>
