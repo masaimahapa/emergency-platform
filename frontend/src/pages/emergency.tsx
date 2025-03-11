@@ -2,11 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { Emergency, EmergencyResponse } from '@/models/emergency.ts';
 import { Link } from 'react-router';
-import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Responder } from '@/models/responder';
-import { calculateDistance, createEmergencyIcon, getResponderIcon } from '../lib/utils';
+import { calculateDistance, createEmergencyIcon, getResponderIcon, getMapBounds } from '@/lib/utils';
 import Loader from '@/components/loader';
+import MapPlots, { MapMarker } from '@/components/map-plots';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -151,6 +151,74 @@ const EmergencyPage = () => {
         .sort((a, b) => a.distance - b.distance);
     
     const closestAvailableResponders = sortedAvailableResponders.slice(0, 3);
+
+    const allMarkers: MapMarker[] = [
+
+        {
+            id: `emergency-${emergency.id}`,
+            latitude: emergency.latitude,
+            longitude: emergency.longitude,
+            icon: createEmergencyIcon(emergency.type),
+            popupContent: (
+                <div>
+                    <strong>{emergency.type}</strong><br />
+                    {emergency.description}
+                </div>
+            )
+        },
+        ...assignedRespondersWithDistance.map(responder => ({
+            id: `assigned-${responder.id}`,
+            latitude: responder.latitude,
+            longitude: responder.longitude,
+            icon: getResponderIcon(responder.type),
+            popupContent: (
+                <div>
+                    <strong>{responder.name}</strong><br />
+                    Type: {responder.type}<br />
+                    Status: <span className="font-medium text-blue-600">Assigned</span><br />
+                    {responder.distance.toFixed(2)} km from emergency
+                    <div className="mt-2">
+                        <button
+                            onClick={() => removeResponder(Number(responder.id))}
+                            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                        >
+                            Remove from Emergency
+                        </button>
+                    </div>
+                </div>
+            )
+        })),
+        ...closestAvailableResponders.map(responder => ({
+            id: `available-${responder.id}`,
+            latitude: responder.latitude,
+            longitude: responder.longitude,
+            icon: getResponderIcon(responder.type),
+            popupContent: (
+                <div>
+                    <strong>{responder.name}</strong><br />
+                    Type: {responder.type}<br />
+                    Status: <span className="font-medium text-green-600">Available</span><br />
+                    {responder.distance.toFixed(2)} km from emergency
+                    <div className="mt-2">
+                        <button
+                            onClick={() => assignResponder(Number(responder.id))}
+                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                        >
+                            Assign to Emergency
+                        </button>
+                    </div>
+                </div>
+            )
+        }))
+    ];
+    
+    const allLocations = [
+        { latitude: emergency.latitude, longitude: emergency.longitude },
+        ...assignedResponders.map(r => ({ latitude: r.latitude, longitude: r.longitude })),
+        ...closestAvailableResponders.map(r => ({ latitude: r.latitude, longitude: r.longitude }))
+    ];
+    const mapBounds = getMapBounds(allLocations);
+    
 
     return (
         <div className='container mx-auto p-4'>
@@ -306,78 +374,15 @@ const EmergencyPage = () => {
                     </div>
                 </div>
                 
-                <div className='w-full h-96' style={{ position: 'relative' }}>
-                    <MapContainer 
-                        center={[emergency.latitude, emergency.longitude]} 
-                        zoom={13} 
-                        scrollWheelZoom={true}
-                        style={{ height: '100%', width: '100%' }}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        
-                        <Marker 
-                            position={[emergency.latitude, emergency.longitude]} 
-                            icon={createEmergencyIcon(emergency.type)}
-                        >
-                            <Popup>
-                                <strong>{emergency.type}</strong><br />
-                                {emergency.description}
-                            </Popup>
-                            <Tooltip permanent>Emergency Site</Tooltip>
-                        </Marker>
-                        
-                        {!loadingAssignedResponders && assignedResponders.map(responder => (
-                            <Marker 
-                                key={responder.id}
-                                position={[responder.latitude, responder.longitude]} 
-                                icon={getResponderIcon(responder.type)}
-                            >
-                                <Popup>
-                                    <strong>{responder.name}</strong><br />
-                                    Type: {responder.type}<br />
-                                    Status: <span className="font-medium text-blue-600">Assigned</span><br />
-                                    {assignedRespondersWithDistance.find(r => r.id === responder.id)?.distance.toFixed(2)} km from emergency
-                                    <div className="mt-2">
-                                        <button
-                                            onClick={() => removeResponder(Number(responder.id))}
-                                            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
-                                        >
-                                            Remove from Emergency
-                                        </button>
-                                    </div>
-                                </Popup>
-                                <Tooltip>{responder.name} (Assigned)</Tooltip>
-                            </Marker>
-                        ))}
-                        
-                        {!loadingAvailableResponders && closestAvailableResponders.map(responder => (
-                            <Marker 
-                                key={`available-${responder.id}`}
-                                position={[responder.latitude, responder.longitude]} 
-                                icon={getResponderIcon(responder.type)}
-                                opacity={0.6} 
-                            >
-                                <Popup>
-                                    <strong>{responder.name}</strong><br />
-                                    Type: {responder.type}<br />
-                                    Status: <span className="font-medium text-green-600">Available</span><br />
-                                    {responder.distance.toFixed(2)} km from emergency
-                                    <div className="mt-2">
-                                        <button
-                                            onClick={() => assignResponder(Number(responder.id))}
-                                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
-                                        >
-                                            Assign to Emergency
-                                        </button>
-                                    </div>
-                                </Popup>
-                                <Tooltip>{responder.name} (Available)</Tooltip>
-                            </Marker>
-                        ))}
-                    </MapContainer>
+                <div className="rounded-md overflow-hidden border border-gray-200">
+                    <MapPlots
+                        markers={allMarkers}
+                        title="Emergency Response Map"
+                        zoom={12}
+                        bounds={mapBounds}
+                        center={[emergency.latitude, emergency.longitude]}
+                        className="h-[600px]"
+                    />
                 </div>
             </div>
         </div>

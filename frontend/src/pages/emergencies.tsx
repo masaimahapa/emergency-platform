@@ -148,6 +148,7 @@ function Emergencies(){
                             title={`${filter === 'all' ? 'All' : filter} Emergencies`}
                             markers={emergencyMarkers}
                             bounds={getMapBounds(emergencies)}
+                            zoom={12}
                         />
                     </div>
                 </TabsContent>

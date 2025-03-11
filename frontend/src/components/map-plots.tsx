@@ -1,7 +1,7 @@
-import { Marker, Popup, TileLayer } from "react-leaflet";
-
-import { MapContainer } from "react-leaflet";
+import { Marker, Popup, TileLayer, MapContainer, useMap } from "react-leaflet";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import L from "leaflet";
+import { useEffect } from "react";
 
 export interface MapMarker {
     id: string| number;
@@ -21,45 +21,62 @@ export interface MapPlotsProps {
     center?: [number, number];
 }
 
-function MapPlots(
-    {
-        markers,
-        bounds,
-        title = "Map",
-        className="h-96",
-        zoom=12
-    }: MapPlotsProps
-) {
+function FitBounds({ bounds }: { bounds?: L.LatLngBounds }) {
+    const map = useMap();
+    
+    useEffect(() => {
+        if (bounds && bounds.isValid()) {
+            map.fitBounds(bounds);
+        }
+    }, [map, bounds]);
+    
+    return null;
+}
+
+
+function MapPlots({
+    markers,
+    bounds,
+    title = "Map",
+    className = "h-96",
+    zoom = 11,
+    center
+}: MapPlotsProps) {
+    const mapCenter = center || (markers.length > 0 ? [markers[0].latitude, markers[0].longitude] : [0, 0]);
+    
     return (
         <Card>
-        <CardHeader>{title}</CardHeader>
-        <CardContent className={className}>
-            {markers.length >0 && (
+            <CardHeader>{title}</CardHeader>
+            <CardContent className={className}>
                 <MapContainer
-                bounds={bounds}
-                style={{width: '100%', height: '100%'}}
-                zoomControl={true}
-                zoom={zoom}
-                
+                    center={mapCenter as [number, number]}
+                    zoom={zoom}
+                    style={{ height: '100%', width: '100%' }}
                 >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-                    {markers.map(marker =>(
-                        <Marker key={marker.id} position={[marker.latitude, marker.longitude]}
-                        icon={marker.icon}
+                    {bounds && <FitBounds bounds={bounds} />}
+                    
+                    <TileLayer 
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    
+                    {markers.map(marker => (
+                        <Marker 
+                            key={marker.id} 
+                            position={[marker.latitude, marker.longitude]}
+                            icon={marker.icon}
                         >
-             {marker.popupContent && (
-                <Popup>
-                    {marker.popupContent}
-                </Popup>
-             )}
+                            {marker.popupContent && (
+                                <Popup>
+                                    {marker.popupContent}
+                                </Popup>
+                            )}
                         </Marker>
                     ))}
                 </MapContainer>
-            )}
-        </CardContent>
-    </Card>     
-    )
+            </CardContent>
+        </Card>
+    );
 }
 
 export default MapPlots;

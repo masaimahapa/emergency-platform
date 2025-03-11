@@ -9,6 +9,8 @@ import Layout from '@/components/layout.tsx';
 import RespondersPage from '@/pages/responders.tsx';
 import NotFound from './components/not-found';
 import ResponderDetailsPage from '@/pages/responder-details-page';
+import 'leaflet/dist/leaflet.css';
+import '@/lib/map-setup'; // Initialize Leaflet
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

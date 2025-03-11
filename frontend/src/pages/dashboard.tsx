@@ -9,6 +9,8 @@ import Loader from '@/components/loader';
 import MapPlots from '@/components/map-plots';
 import { MapMarker } from '@/components/map-plots';
 import { createEmergencyIcon, getMapBounds } from '@/lib/utils';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+
 const defaultIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
@@ -103,7 +105,21 @@ fetchData();
 </div>
 
 <div className='mt-8'>
-<MapPlots title='Active Emergencies' markers={emergencyMarkers} bounds={getMapBounds(activeEmergencies)} />
+{emergencyMarkers.length > 0 ? (
+  <MapPlots 
+    title='Active Emergencies' 
+    markers={emergencyMarkers} 
+    bounds={activeEmergencies.length > 0 ? getMapBounds(activeEmergencies) : undefined} 
+    zoom={12} 
+  />
+) : (
+  <Card>
+    <CardHeader>Active Emergencies</CardHeader>
+    <CardContent className="h-96 flex items-center justify-center">
+      <p className="text-gray-500">No active emergencies to display on the map</p>
+    </CardContent>
+  </Card>
+)}
 </div>
         </div>
     )

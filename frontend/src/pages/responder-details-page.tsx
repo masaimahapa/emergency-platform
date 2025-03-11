@@ -9,9 +9,6 @@ import { getMapBounds, getResponderIcon } from "@/lib/utils";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
-
-
 function ResponderDetailsPage() {
     const { id } = useParams();
     const [responder, setResponder] = useState<Responder | null>(null);
