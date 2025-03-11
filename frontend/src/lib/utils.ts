@@ -51,7 +51,7 @@ export const createCustomIcon = (type: string) => {
           svg=`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ambulance"><path d="M10 10H6"/><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.684-.948l-1.923-.641a1 1 0 0 1-.578-.502l-1.539-3.076A1 1 0 0 0 16.382 8H14"/><path d="M8 8v4"/><path d="M9 18h6"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`
           break;
       case 'traffic':
-          svg=``
+          svg=`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-traffic-cone"><path d="M9.3 6.2a4.55 4.55 0 0 0 5.4 0"/><path d="M7.9 10.7c.9.8 2.4 1.3 4.1 1.3s3.2-.5 4.1-1.3"/><path d="M13.9 3.5a1.93 1.93 0 0 0-3.8 0l-3 10c-.1.2-.1.4-.1.6 0 1.7 2.2 3.1 5 3.1s5-1.4 5-3.1c0-.2 0-.4-.1-.5Z"/><path d="m7 15-1.8 6.6c-.1.5.2 1 .8 1.1h12c.6-.1.9-.6.8-1.1L17 15"/></svg>`
           break;
       default:
           svg= `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-siren"><path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"/><path d="M21 12h1"/><path d="M18.5 4.5 18 5"/><path d="M2 12h1"/><path d="M12 2v1"/><path d="m4.929 4.929.707.707"/><path d="M12 12v6"/></svg>`
@@ -72,7 +72,13 @@ export interface Location{
 }
 
 export const getMapBounds = (locations: Location[]) => {
-  if( locations.length === 0) return [[-26.1074, 28.0543], [-26.1074, 28.0543]];
+  if (locations.length === 0) {
+    // Create a default bounds for Johannesburg
+    return L.latLngBounds(
+      L.latLng(-26.1074, 28.0543),
+      L.latLng(-26.1074, 28.0543)
+    );
+  }
 
   const lats = locations.map(e => e.latitude);
   const longs = locations.map(e => e.longitude);
@@ -82,7 +88,10 @@ export const getMapBounds = (locations: Location[]) => {
   const minLong = Math.min(...longs);
   const maxLong = Math.max(...longs);
 
-  return [[minLat, minLong], [maxLat, maxLong]];
+  return L.latLngBounds(
+    L.latLng(minLat, minLong),
+    L.latLng(maxLat, maxLong)
+  );
 }
 
 export const createResponderIcon = (type: string, color: string) => {

@@ -1,4 +1,3 @@
-
 import { Marker, Popup, TileLayer } from "react-leaflet";
 
 import { MapContainer } from "react-leaflet";
@@ -9,7 +8,7 @@ export interface MapMarker {
     latitude: number;
     longitude: number;
     popupContent?: React.ReactNode;
-    icon?: L.Icon;
+    icon?: L.Icon | L.DivIcon;
 }
 
 export interface MapPlotsProps {
