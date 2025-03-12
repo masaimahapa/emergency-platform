@@ -5,6 +5,8 @@ import Loader from "@/components/loader";
 import MapPlots, { MapMarker } from "@/components/map-plots";
 import 'leaflet/dist/leaflet.css';
 import { getMapBounds, getResponderIcon } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -116,27 +118,31 @@ function ResponderDetailsPage() {
                         <div>
                             <p className='font-medium'>Status</p>
                             <div className='flex items-center gap-2 mt-1'>
-                                <span className={`inline-block px-2 py-1 rounded-full text-sm ${
-                                    responder.status === 'active' 
-                                        ? 'bg-green-100 text-green-800'
-                                        : responder.status === 'assigned'
-                                        ? 'bg-blue-100 text-blue-800'
-                                        : 'bg-gray-100 text-gray-800'
-                                }`}>
+                                <Badge 
+                                    variant={
+                                        responder.status === 'active' 
+                                            ? 'secondary'
+                                            : responder.status === 'assigned'
+                                            ? 'secondary'
+                                            : 'outline'
+                                    }
+                                    className={
+                                        responder.status === 'active' 
+                                            ? 'bg-green-100 text-green-800'
+                                            : responder.status === 'assigned'
+                                            ? 'bg-blue-100 text-blue-800'
+                                            : 'bg-gray-100 text-gray-800'
+                                    }
+                                >
                                     {responder.status}
-                                </span>
+                                </Badge>
                             </div>
                         </div>
                         <div>
                             <p className='font-medium'>Location</p>
                             <p className='text-gray-700'>{responder.latitude}, {responder.longitude}</p>
                         </div>
-                        {responder.phoneNumber && (
-                            <div>
-                                <p className='font-medium'>Phone Number</p>
-                                <p className='text-gray-700'>{responder.phoneNumber}</p>
-                            </div>
-                        )}
+
                         <div>
                             <p className='font-medium'>Last Updated</p>
                             <p className='text-gray-700'>{new Date(responder.updatedAt).toLocaleString()}</p>
@@ -149,9 +155,10 @@ function ResponderDetailsPage() {
                     <div className='space-y-4'>
                         <p className='text-gray-600'>Update the responder's current status:</p>
                         <div className='flex flex-wrap gap-2'>
-                            <button
+                            <Button
                                 onClick={() => updateResponderStatus('active')}
-                                className={`px-4 py-2 rounded-md ${
+                                variant={responder.status === 'active' ? 'default' : 'outline'}
+                                className={`${
                                     responder.status === 'active'
                                         ? 'bg-green-600 text-white'
                                         : 'bg-green-100 text-green-800 hover:bg-green-200'
@@ -159,10 +166,11 @@ function ResponderDetailsPage() {
                                 disabled={responder.status === 'active'}
                             >
                                 Set Active
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => updateResponderStatus('assigned')}
-                                className={`px-4 py-2 rounded-md ${
+                                variant={responder.status === 'assigned' ? 'default' : 'outline'}
+                                className={`${
                                     responder.status === 'assigned'
                                         ? 'bg-blue-600 text-white'
                                         : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
@@ -170,10 +178,11 @@ function ResponderDetailsPage() {
                                 disabled={responder.status === 'assigned'}
                             >
                                 Set Assigned
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => updateResponderStatus('offline')}
-                                className={`px-4 py-2 rounded-md ${
+                                variant={responder.status === 'offline' ? 'default' : 'outline'}
+                                className={`${
                                     responder.status === 'offline'
                                         ? 'bg-gray-600 text-white'
                                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -181,7 +190,7 @@ function ResponderDetailsPage() {
                                 disabled={responder.status === 'offline'}
                             >
                                 Set Offline
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

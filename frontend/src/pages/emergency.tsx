@@ -7,6 +7,8 @@ import { Responder } from '@/models/responder';
 import { calculateDistance, createEmergencyIcon, getResponderIcon, getMapBounds } from '@/lib/utils';
 import Loader from '@/components/loader';
 import MapPlots, { MapMarker } from '@/components/map-plots';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -175,15 +177,17 @@ const EmergencyPage = () => {
                 <div>
                     <strong>{responder.name}</strong><br />
                     Type: {responder.type}<br />
-                    Status: <span className="font-medium text-blue-600">Assigned</span><br />
+                    Status: <Badge variant="secondary" className="bg-blue-100 text-blue-800">Assigned</Badge><br />
                     {responder.distance.toFixed(2)} km from emergency
                     <div className="mt-2">
-                        <button
+                        <Button
                             onClick={() => removeResponder(Number(responder.id))}
-                            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                            variant="destructive"
+                            size="sm"
+                            className="w-full"
                         >
                             Remove from Emergency
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )
@@ -197,15 +201,17 @@ const EmergencyPage = () => {
                 <div>
                     <strong>{responder.name}</strong><br />
                     Type: {responder.type}<br />
-                    Status: <span className="font-medium text-green-600">Available</span><br />
+                    Status: <Badge variant="secondary" className="bg-green-100 text-green-800">Available</Badge><br />
                     {responder.distance.toFixed(2)} km from emergency
                     <div className="mt-2">
-                        <button
+                        <Button
                             onClick={() => assignResponder(Number(responder.id))}
-                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                            variant="default"
+                            size="sm"
+                            className="w-full bg-blue-600 hover:bg-blue-700"
                         >
                             Assign to Emergency
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )
@@ -248,13 +254,12 @@ const EmergencyPage = () => {
                         </div>
                         <div>
                             <p className='font-medium'>Status</p>
-                            <span className={`inline-block px-2 py-1 rounded-full text-sm ${
-                                emergency.status === 'active' 
-                                ? 'bg-red-100 text-red-800' 
-                                : 'bg-green-100 text-green-800'
-                            }`}>
+                            <Badge variant={emergency.status === 'active' ? 'destructive' : 'secondary'} 
+                                className={emergency.status === 'active' 
+                                    ? 'bg-red-100 text-red-800' 
+                                    : 'bg-green-100 text-green-800'}>
                                 {emergency.status}
-                            </span>
+                            </Badge>
                         </div>
                         <div>
                             <p className='font-medium'>Reported</p>
@@ -292,15 +297,16 @@ const EmergencyPage = () => {
                                             </p>
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <div className="bg-blue-100 px-2 py-1 rounded-full text-xs text-blue-800">
+                                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                                                 Assigned
-                                            </div>
-                                            <button
+                                            </Badge>
+                                            <Button
                                                 onClick={() => removeResponder(Number(responder.id))}
-                                                className="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700 transition-colors"
+                                                variant="destructive"
+                                                size="sm"
                                             >
                                                 Remove
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -339,12 +345,14 @@ const EmergencyPage = () => {
                                             <span className="font-medium">{responder.distance.toFixed(2)} km</span> away
                                         </p>
                                     </div>
-                                    <button
+                                    <Button
                                         onClick={() => assignResponder(Number(responder.id))}
-                                        className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                                        variant="default"
+                                        size="sm"
+                                        className="bg-blue-600 hover:bg-blue-700"
                                     >
                                         Assign
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         ))}

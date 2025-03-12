@@ -6,7 +6,6 @@ export interface Responder {
   status: 'active' | 'assigned' | 'offline';
   latitude: number;
   longitude: number;
-  phoneNumber?: string;
   createdAt?: number;
   updatedAt: string;
 }

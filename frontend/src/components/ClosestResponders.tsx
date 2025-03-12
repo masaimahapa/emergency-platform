@@ -86,17 +86,7 @@ const ClosestResponders: React.FC<ClosestRespondersProps> = ({
                 Available
               </div>
             </div>
-            
-            {responder.phoneNumber && (
-              <div className="mt-2 pt-2 border-t border-gray-100">
-                <a 
-                  href={`tel:${responder.phoneNumber}`}
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  {responder.phoneNumber}
-                </a>
-              </div>
-            )}
+          
           </div>
         ))}
       </div>
